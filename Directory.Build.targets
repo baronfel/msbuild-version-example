@@ -1,0 +1,19 @@
+<Project>
+    <PropertyGroup>
+        <PrepareForBuildDependsOn>ReadVersionFromGit;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
+    </PropertyGroup>
+
+    <Target Name="ReadVersionFromGit" Condition="'$(EnableGitVersioning)' == 'true'">
+        <Exec Command="git rev-parse --short HEAD"
+            ConsoleToMsBuild="true"
+        >
+            <Output TaskParameter="ConsoleOutput" PropertyName="_GitVersionOutput" />
+        </Exec>
+
+        <PropertyGroup>
+            <GitShortSha>$(_GitVersionOutput)</GitShortSha>
+            <VersionSuffix>$(GitShortSha)</VersionSuffix>
+            <InformationalVersion>$(Version)+$(GitShortSha)</InformationalVersion>
+        </PropertyGroup>
+    </Target>
+</Project>
